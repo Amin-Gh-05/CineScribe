@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.HttpURLConnection;
+
 public class Actors {
     public static final String API_KEY = "ZXMUN2HCOKB4B+TUfs0jNw==47tTwUHPq1FbZsj3";
     String netWorth;
@@ -16,7 +17,7 @@ public class Actors {
         this.isAlive = isAlive;
     }
 
-    Actors(String netWorth, boolean isAlive, String deathDate) {
+    public Actors(String netWorth, boolean isAlive, String deathDate) {
         this.netWorth = netWorth;
         this.isAlive = isAlive;
         this.deathDate = deathDate;
@@ -29,7 +30,7 @@ public class Actors {
      */
     public String getActorData(String name) {
         try {
-            URL url = new URL("https://api.api-ninjas.com/v1/celebrity?name="+
+            URL url = new URL("https://api.api-ninjas.com/v1/celebrity?name=" +
                     name.replace(" ", "+")+"&apikey="+API_KEY);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("X-Api-Key", API_KEY);
@@ -45,7 +46,8 @@ public class Actors {
 
                 in.close();
                 return response.toString();
-            } else {
+            }
+            else {
                 return "Error: " + connection.getResponseCode() + " " + connection.getResponseMessage();
             }
         }
@@ -59,9 +61,9 @@ public class Actors {
         JSONArray ja = new JSONArray(actorsInfoJson);
         JSONObject jo = ja.getJSONObject(0);
         // parse json
-        double info = jo.getDouble("net_worth");
-        this.netWorth = Double.toString(info);
-        return info;
+        double net_worth = jo.getDouble("net_worth");
+        this.netWorth = Double.toString(net_worth);
+        return net_worth;
     }
 
     public boolean isAlive(String actorsInfoJson) {
@@ -69,9 +71,9 @@ public class Actors {
         JSONArray ja = new JSONArray(actorsInfoJson);
         JSONObject jo = ja.getJSONObject(0);
         // parse json
-        boolean info = jo.getBoolean("is_alive");
-        this.isAlive = info;
-        return info;
+        boolean is_alive = jo.getBoolean("is_alive");
+        this.isAlive = is_alive;
+        return is_alive;
     }
 
     public String getDateOfDeathViaApi(String actorsInfoJson) {
@@ -79,9 +81,9 @@ public class Actors {
         JSONArray ja = new JSONArray(actorsInfoJson);
         JSONObject jo = ja.getJSONObject(0);
         // parse json
-        String info = jo.getString("death");
-        this.deathDate = info;
-        return info;
+        String death = jo.getString("death");
+        this.deathDate = death;
+        return death;
     }
 
 }
