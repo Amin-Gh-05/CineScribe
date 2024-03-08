@@ -13,16 +13,20 @@ public class Actors {
     Boolean isAlive;
     String deathDate;
     int age;
+    String gender;
+    String nationality;
 
     public Actors(String netWorth, boolean isAlive) {
         this.netWorth = netWorth;
         this.isAlive = isAlive;
     }
 
-    public Actors(String netWorth, boolean isAlive, String deathDate) {
+    public Actors(String netWorth, boolean isAlive, String deathDate, int age, String gender, String nationality) {
         this.netWorth = netWorth;
         this.isAlive = isAlive;
         this.deathDate = deathDate;
+        this.gender = gender;
+        this.nationality = nationality;
     }
 
     @SuppressWarnings({"deprecation"})
@@ -96,4 +100,19 @@ public class Actors {
         this.age = jo.getInt("age");
     }
 
+    public void getGender(String actorsInfoJson) {
+        // make a jsonarray of the string given
+        JSONArray ja = new JSONArray(actorsInfoJson);
+        JSONObject jo = ja.getJSONObject(0);
+        // parse json
+        this.gender = jo.getString("gender");
+    }
+
+    public void getNationality(String actorsInfoJson) {
+        // make a jsonarray of the string given
+        JSONArray ja = new JSONArray(actorsInfoJson);
+        JSONObject jo = ja.getJSONObject(0);
+        // parse json
+        this.nationality = jo.getString("nationality");
+    }
 }

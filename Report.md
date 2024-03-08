@@ -24,7 +24,7 @@ You can use this program easily by typing Movie or Actor name and get info.
 * You can run the program in CMD
 * after running, enter your choices in the menu and press Enter
 ```
-java -jar ADDRESS\Second_Assignment_CineScribe.main.jar
+java -jar ADDRESS\CineScribe.jar
 ```
 
 ## Authors

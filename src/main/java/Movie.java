@@ -14,7 +14,10 @@ public class Movie {
     ArrayList<String> actorsList;
     String rating;
     int ImdbVotes;
-    int yearReleased; // bonus attribute
+    int yearReleased;
+    String runTime;
+    String director;
+    String country;
 
     public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes) {
         this.ImdbVotes = ImdbVotes;
@@ -22,12 +25,16 @@ public class Movie {
         this.rating = rating;
     }
 
-    public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes, int yearReleased) {
+    public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes, int yearReleased, String runTime, String director, String country) {
         this.ImdbVotes = ImdbVotes;
         this.actorsList = actorsList;
         this.rating = rating;
         this.yearReleased = yearReleased;
+        this.runTime = runTime;
+        this.director = director;
+        this.country = country;
     }
+
     @SuppressWarnings({"deprecation"})
     /*
       Retrieves data for the specified movie.
@@ -89,11 +96,28 @@ public class Movie {
         this.actorsList = new ArrayList<>(Arrays.asList(actors.split(", ")));
     }
 
-    // bonus attribute getter and setter method
     public void getMovieYearRelease(String movieInfoJson) {
         JSONObject jo = new JSONObject(movieInfoJson);
         // parse json
         String year = jo.getString("Year");
         this.yearReleased = Integer.parseInt(year);
+    }
+
+    public void getRunTime(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        this.runTime = jo.getString("Runtime");
+    }
+
+    public void getMovieDirector(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        this.director = jo.getString("Director");
+    }
+
+    public void getMovieCountry(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        this.country = jo.getString("Country");
     }
 }
