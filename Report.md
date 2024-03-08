@@ -34,9 +34,11 @@ Amin Ghoorchian
 [Contact on Telegram](https://t.me/AminGh05)
 
 ## Version History
-
+* 1.1
+  * More Details
+  * Better interface experience
 * 1.0
-    * Initial Release
+  * Initial Release
 
 ## Acknowledgments
 
