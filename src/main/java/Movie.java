@@ -1,5 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -13,7 +14,7 @@ public class Movie {
     ArrayList<String> actorsList;
     String rating;
     int ImdbVotes;
-    int yearReleased;
+    int yearReleased; // bonus attribute
 
     public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes) {
         this.ImdbVotes = ImdbVotes;
@@ -27,8 +28,7 @@ public class Movie {
         this.rating = rating;
         this.yearReleased = yearReleased;
     }
-
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation"})
     /*
       Retrieves data for the specified movie.
 
@@ -44,14 +44,13 @@ public class Movie {
             BufferedReader reader = new BufferedReader(new InputStreamReader(Url.getInputStream()));
             String line;
             StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine())!=null) {
+            while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
             }
             reader.close();
 
             return stringBuilder.toString();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
@@ -61,6 +60,7 @@ public class Movie {
         JSONObject jo = new JSONObject(moviesInfoJson);
         // parse json
         String imdbVotes = jo.getString("imdbVotes");
+        // remove "," from the string including votes count
         for (int i = 0; i < imdbVotes.length(); i++) {
             if (imdbVotes.charAt(i) == ',') {
                 imdbVotes = imdbVotes.replace(",", "");
@@ -74,6 +74,7 @@ public class Movie {
 
     public String getRatingViaApi(String moviesInfoJson) {
         JSONObject jo = new JSONObject(moviesInfoJson);
+        // get a jsonarray out of the main json for ratings
         JSONArray ja = new JSONArray(jo.getJSONArray("Ratings"));
         JSONObject rating = ja.getJSONObject(0);
         String value = rating.getString("Value");
@@ -84,10 +85,11 @@ public class Movie {
     public void getActorListViaApi(String movieInfoJson) {
         JSONObject jo = new JSONObject(movieInfoJson);
         // parse json
-        String actors  = jo.getString("Actors");
+        String actors = jo.getString("Actors");
         this.actorsList = new ArrayList<>(Arrays.asList(actors.split(", ")));
     }
 
+    // bonus attribute getter and setter method
     public void getMovieYearRelease(String movieInfoJson) {
         JSONObject jo = new JSONObject(movieInfoJson);
         // parse json

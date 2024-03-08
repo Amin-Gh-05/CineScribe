@@ -1,5 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +12,7 @@ public class Actors {
     String netWorth;
     Boolean isAlive;
     String deathDate;
+    int age;
 
     public Actors(String netWorth, boolean isAlive) {
         this.netWorth = netWorth;
@@ -22,6 +24,7 @@ public class Actors {
         this.isAlive = isAlive;
         this.deathDate = deathDate;
     }
+
     @SuppressWarnings({"deprecation"})
     /*
       Retrieves data for the specified actor.
@@ -31,7 +34,7 @@ public class Actors {
     public String getActorData(String name) {
         try {
             URL url = new URL("https://api.api-ninjas.com/v1/celebrity?name=" +
-                    name.replace(" ", "+")+"&apikey="+API_KEY);
+                    name.replace(" ", "+") + "&apikey=" + API_KEY);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("X-Api-Key", API_KEY);
             System.out.println(connection);
@@ -46,16 +49,15 @@ public class Actors {
 
                 in.close();
                 return response.toString();
-            }
-            else {
+            } else {
                 return "Error: " + connection.getResponseCode() + " " + connection.getResponseMessage();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
+
     public double getNetWorthViaApi(String actorsInfoJson) {
         // make a jsonarray of the string given
         JSONArray ja = new JSONArray(actorsInfoJson);
@@ -84,6 +86,14 @@ public class Actors {
         String death = jo.getString("death");
         this.deathDate = death;
         return death;
+    }
+
+    public void getAge(String actorsInfoJson) {
+        // make a jsonarray of the string given
+        JSONArray ja = new JSONArray(actorsInfoJson);
+        JSONObject jo = ja.getJSONObject(0);
+        // parse json
+        this.age = jo.getInt("age");
     }
 
 }
