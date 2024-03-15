@@ -106,7 +106,6 @@ public class Main {
                 }
                 case "Exit" -> {
                     flag = false;
-                    read.close();
                     System.out.println("Thank you for using our app!");
                 }
                 case null, default -> System.out.println("Please enter a valid choice!");
