@@ -1,56 +1,123 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Movie {
-    public static final String API_KEY = "Your API_KEY";   // TODO --> add your api key about Movie here
-    int ImdbVotes;
+    public static final String API_KEY = "fd60446c";
     ArrayList<String> actorsList;
     String rating;
+    int ImdbVotes;
+    int yearReleased;
+    String runTime;
+    String director;
+    String country;
 
-    public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes){
-        //TODO --> (Write a proper constructor using the get_from_api functions)
+    public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes) {
+        this.ImdbVotes = ImdbVotes;
+        this.actorsList = actorsList;
+        this.rating = rating;
     }
 
-    @SuppressWarnings("deprecation")
-    /**
-     * Retrieves data for the specified movie.
-     *
-     * @param title the name of the title for which MovieData should be retrieved
+    public Movie(ArrayList<String> actorsList, String rating, int ImdbVotes, int yearReleased, String runTime, String director, String country) {
+        this.ImdbVotes = ImdbVotes;
+        this.actorsList = actorsList;
+        this.rating = rating;
+        this.yearReleased = yearReleased;
+        this.runTime = runTime;
+        this.director = director;
+        this.country = country;
+    }
+
+    @SuppressWarnings({"deprecation"})
+    /*
+      Retrieves data for the specified movie.
+
+      @param title the name of the title for which MovieData should be retrieved
      * @return a string representation of the MovieData, or null if an error occurred
      */
 
-    public String getMovieData(String title) throws IOException {
-        URL url = new URL("https://www.omdbapi.com/?t="+title+"&apikey="+API_KEY);
-        URLConnection Url = url.openConnection();
-        Url.setRequestProperty("Authorization", "Key" + API_KEY);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(Url.getInputStream()));
-        String line;
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((line = reader.readLine())!=null) {
-            stringBuilder.append(line);
+    public String getMovieData(String title) {
+        try {
+            URL url = new URL("https://www.omdbapi.com/?t=" + title + "&apikey=" + API_KEY);
+            URLConnection Url = url.openConnection();
+            Url.setRequestProperty("apikey", API_KEY);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Url.getInputStream()));
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            reader.close();
+
+            return stringBuilder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        reader.close();
-        //handle an error if the chosen movie is not found
-        return stringBuilder.toString();
     }
-    public int getImdbVotesViaApi(String moviesInfoJson){
-        //TODO --> (This function must change and return the "ImdbVotes" as an Integer)
-        // NOTICE :: you are not permitted to convert this function to return a String instead of an int !!!
-        int ImdbVotes = 0;
+
+    public int getImdbVotesViaApi(String moviesInfoJson) {
+        JSONObject jo = new JSONObject(moviesInfoJson);
+        // parse json
+        String imdbVotes = jo.getString("imdbVotes");
+        // remove "," from the string including votes count
+        for (int i = 0; i < imdbVotes.length(); i++) {
+            if (imdbVotes.charAt(i) == ',') {
+                imdbVotes = imdbVotes.replace(",", "");
+            }
+        }
+
+        int ImdbVotes = Integer.parseInt(imdbVotes);
+        this.ImdbVotes = ImdbVotes;
         return ImdbVotes;
     }
 
-    public String getRatingViaApi(String moviesInfoJson){
-        //TODO --> (This function must return the rating in the "Ratings" part
-        // where the source is "Internet Movie Database")  -->
-        String rating = "";
-        return rating;
+    public String getRatingViaApi(String moviesInfoJson) {
+        JSONObject jo = new JSONObject(moviesInfoJson);
+        // get a jsonarray out of the main json for ratings
+        JSONArray ja = new JSONArray(jo.getJSONArray("Ratings"));
+        JSONObject rating = ja.getJSONObject(0);
+        String value = rating.getString("Value");
+        this.rating = value;
+        return value;
     }
 
-    public void getActorListViaApi(String movieInfoJson){
-        //TODO --> (This function must return the "Actors" in actorsList)
+    public void getActorListViaApi(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        String actors = jo.getString("Actors");
+        this.actorsList = new ArrayList<>(Arrays.asList(actors.split(", ")));
+    }
+
+    public void getMovieYearRelease(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        String year = jo.getString("Year");
+        this.yearReleased = Integer.parseInt(year);
+    }
+
+    public void getRunTime(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        this.runTime = jo.getString("Runtime");
+    }
+
+    public void getMovieDirector(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        this.director = jo.getString("Director");
+    }
+
+    public void getMovieCountry(String movieInfoJson) {
+        JSONObject jo = new JSONObject(movieInfoJson);
+        // parse json
+        this.country = jo.getString("Country");
     }
 }
